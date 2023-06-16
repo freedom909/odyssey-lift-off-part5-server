@@ -1,0 +1,9 @@
+environment:
+ - MONGODB_URI=mongodb+srv://chika:chika@cluster0.lidru.mongodb.net/
+links:
+ - mongodb
+ dependencies:
+  - mongodb
+volumes:
+ - .:/starter
+ - /starter/node_modules

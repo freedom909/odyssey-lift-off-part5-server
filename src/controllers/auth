@@ -1,0 +1,49 @@
+import passport from "passport";
+/**
+ * GET /login
+ * Login page.
+ */
+export const login = (req: any, res: any, next: any) => {
+    passport.authenticate('local',(err: any,user: any,info: { message: any; }) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            req.flash('error',info.message);
+            return res.redirect('/account/login');
+
+            
+        }
+        req.login(user,(err: any) => {
+            if (err) {
+                return next(err);
+            }
+            req.flash('success', { msg: 'Success! You are logged in.' });
+            return res.redirect(req.session.returnTo || '/');
+        });
+    })(req,res,next);
+}
+
+
+
+export const logout = (req: any, res: any, next: any)=>{
+    req.logout()
+    req.session.destroy(err=>{
+        if(err) console.log('error:fail to destroy session');
+        req.user=null;
+        res.redirect('/');
+    })
+}
+
+/**
+ * GET /signup
+ * Signup page.
+ */
+export const Signup = (req: any, res: any, next: any)=>{
+    if(req.user){
+        return res.redirect('/');
+    }
+    res.render('/account/signup', {
+        title: 'Signup'
+    });
+}
